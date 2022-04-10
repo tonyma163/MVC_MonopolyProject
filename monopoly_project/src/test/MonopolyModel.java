@@ -995,5 +995,70 @@ public class MonopolyModel {
         
         return result;
     }
+
+    public String modifyPlayerBalance(int playerId, long newBalance) {
+        String result="";
+            
+        //check the playerId is 0-3
+        if (playerId >=0 && playerId <=3) {
+            //update
+            playerStatus.get(playerId).setMoney(newBalance);
+            result+="Updated! Player "+(playerId+1)+" new balance is $"+playerStatus.get(playerId).getMoney();
+        } else {
+            result+="The playerId is incorrect!";
+        }
+        
+        return result;
+    }
+
+    public String modifyPlayerIsAlived(int playerId, int booleanChoice) {
+         String result="";
+            
+        //check the playerId is 0-3
+        if (playerId >=0 && playerId <=3) {
+            //update
+            if (booleanChoice==1) {
+                playerStatus.get(playerId).setIsAlived(true);
+                result+="Updated! Player "+(playerId+1)+" isAlived? "+playerStatus.get(playerId).getIsAlived();
+            } else if (booleanChoice==2) {
+                playerStatus.get(playerId).setIsAlived(false);
+                result+="Updated! Player "+(playerId+1)+" isAlived? "+playerStatus.get(playerId).getIsAlived();
+            } else {
+                result+="Please enter a correct boolean choice (1-true/2-false)";
+            }
+            
+        } else {
+            result+="The playerId is incorrect!";
+        }
+        
+        return result;
+    }
+
+    public String modifyPlayerPos(int playerId, int newPos) {
+        String result="";
+        
+        //check the playerId is 0-3
+        if (playerId >=0 && playerId <=3) {
+            
+            //check pos 0-43
+            if (newPos>=0 && newPos<=43) {
+                //convert to boardPos
+                //int boardPos = calBoardPos(newPos);
+                
+                //update
+                playerStatus.get(playerId).setPosition(newPos);
+                result+="Updated! Player"+(playerId+1)+" is moved to slot "+newPos;
+                
+                
+            } else {
+                result+="The location is incorrect(0-43)";
+            }
+            
+        } else {
+            result+="The playerId is incorrect!";
+        }
+        
+        return result;
+    }
     
 }

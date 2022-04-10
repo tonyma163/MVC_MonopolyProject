@@ -103,5 +103,17 @@ public class MonopolyController {
     public void modifySlotOwnership(int slotId, int ownershipId) {
         view.showMessage(model.modifySlotOwnership(slotId, ownershipId));
     }
+
+    public void modifyPlayerBalance(int playerId, long newBalance) {
+        view.showMessage(model.modifyPlayerBalance(playerId, newBalance));
+    }
+    
+    public void modifyPlayerIsAlived(int playerId, int  booleanChoice) {
+        view.showMessage(model.modifyPlayerIsAlived(playerId, booleanChoice));
+    }
+
+    public void modifyPlayerPos(int playerId, int newPos) {
+        view.showMessage(model.modifyPlayerPos(playerId, newPos));
+    }
     
 }

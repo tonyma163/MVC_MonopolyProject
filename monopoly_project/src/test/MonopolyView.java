@@ -126,7 +126,9 @@ public class MonopolyView {
             } else if (rollChoice==2) {
                 editorModeOn=true;
             }
-            System.out.println("GameEditorMode: "+editorModeOn);
+            
+            //Test gameEditorMode boolean System.out.println("GameEditorMode: "+editorModeOn);
+            
             //if editorModeOn
             while (editorModeOn) {
                 //4 options
@@ -145,16 +147,20 @@ public class MonopolyView {
                         break;
                     case 2:
                         //modify player's balance
+                        modifyPlayerBalance();
                         break;
                     case 3:
                         //modify player's location
+                        modifyPlayerPos();
                         break;
                     case 4:
                         //modify player's alive status
+                        modifyPlayerAlive();
                         break;
                     case 0:
                         //end the game editor mode
                         editorModeOn=false;
+                        round--; //in order to let the player who enter the game editor mode to roll the dice
                         break;
                 }
                 
@@ -199,5 +205,35 @@ public class MonopolyView {
         System.out.println("Please enter the new ownership(0 represent no one own it, 1-4 represent playerId): ");
         int ownershipId = (s.nextInt()-1);
         controller.modifySlotOwnership(slotId, ownershipId);
+    }
+
+    private void modifyPlayerBalance() {
+        //require the playerId and the new balance
+        System.out.println("Please enter the playerId (1-4): ");
+        int playerId = (s.nextInt()-1);
+        System.out.println("Please enter the new balance: ");
+        long newBalance = s.nextLong();
+        controller.modifyPlayerBalance(playerId, newBalance);
+    }
+
+    private void modifyPlayerAlive() {
+        //require the playerId and the alive boolean choice
+                
+        System.out.println("Please enter the playerId (1-4): ");
+        int playerId = (s.nextInt()-1);
+        System.out.println("Please enter the isAlived boolean (1-true/2-false): ");
+        int booleanChoice = s.nextInt();
+        
+        
+        controller.modifyPlayerIsAlived(playerId, booleanChoice);
+    }
+
+    private void modifyPlayerPos() {
+        //require the playerId and the new balance
+        System.out.println("Please enter the playerId (1-4): ");
+        int playerId = (s.nextInt()-1);
+        System.out.println("Please enter the new position(slot): ");
+        int newPos = s.nextInt();
+        controller.modifyPlayerPos(playerId, newPos);
     }
 }
