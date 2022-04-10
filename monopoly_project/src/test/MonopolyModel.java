@@ -601,6 +601,9 @@ public class MonopolyModel {
         if (playerPos>43) {
             int newPlayerPos=playerPos-43;
             playerStatus.get(playerTurn).setPosition(newPlayerPos);
+            //update the playerPos
+            playerPos = playerStatus.get(playerTurn).getPosition();
+            
             //Give $2000 to player
             addMoney(playerTurn, 2000);
             result+="You got $2000!\n";
@@ -725,14 +728,14 @@ public class MonopolyModel {
         //get the player balance
         long playerMoney = playerStatus.get(playerTurn).getMoney();
         
-        //Testing playerMoney = 0
+        //Testing playerMoney = 0;
         //long playerMoney = 0;
         
         //get the player position in order to get the ownerID -> get the owner balance
         int playerSlotPos = playerStatus.get(playerTurn).getPosition();
         //convert to boardPos
         int boardPos = calBoardPos(playerSlotPos);
-        System.out.println("Checking Board POS: "+boardPos);
+       // System.out.println("Checking Board POS: "+boardPos);
         //check has the KEY boardPos exist
         if (slotInfo.containsKey(boardPos)) {
             //get the ownerId
@@ -789,7 +792,7 @@ public class MonopolyModel {
             long newPlayerMoney = playerMoney-slotPrice;
             //update
             playerStatus.get(playerTurn).setMoney(newPlayerMoney);
-            playerStatus.get(playerTurn).setLandNum();
+            playerStatus.get(playerTurn).setAddLandNum();
             
             
             //slotInfo
@@ -797,7 +800,7 @@ public class MonopolyModel {
             //update
             slotInfo.get(boardPos).setForPurchase(false);
             slotInfo.get(boardPos).setSlotOwner(playerTurn);
-            slotInfo.get(boardPos).setSlotName(ownerName);
+            //slotInfo.get(boardPos).setSlotName(ownerName); A Bug
             slotInfo.get(boardPos).setForTrade(true);
             
             //update the output text
@@ -850,6 +853,7 @@ public class MonopolyModel {
                 
             }
             //clear player balance
+            //if (landNum==0)
             playerStatus.get(playerId).clearLandNum();
         }
         
@@ -864,6 +868,132 @@ public class MonopolyModel {
         
         return isAlived;
     }
-    
+
+    public String printBoard() {
+        String board="";
+        
+        
+        for (int i=0;i<boardHeight; i++) {
+                //top
+                if (i==0) {
+                    board+="22 23 24 25 26 27 28 29 30 31 32 33\n";
+                }
+                
+                if (i==1) {
+                    board+="21                               34\n";
+                }
+                
+                if (i==2) {
+                    board+="20                               35\n";
+                }
+                
+                if (i==3) {
+                    board+="19                               36\n";
+                }
+                
+                if (i==4) {
+                    board+="18                               37\n";
+                }
+                
+                if (i==5) {
+                    board+="17                               38\n";
+                }
+                
+                if (i==6) {
+                    board+="16                               39\n";
+                }
+                
+                if (i==7) {
+                    board+="15                               40\n";
+                }
+                
+                if (i==8) {
+                    board+="14                               41\n";
+                }
+                
+                if (i==9) {
+                    board+="13                               42\n";
+                }
+                
+                if (i==10) {
+                    board+="12                               43\n";
+                }
+                
+                //bottom
+                if (i==11) {
+                    board+="11 10  9  8  7  6  5  4  3  2  1  0\n";
+                }
+
+        }
+        
+        return board;
+    }
+
+    public int playerAliveNum() {
+        int playerAliveNum = 0;
+        
+        for (int i=0; i<4; i++) {
+            if (playerStatus.get(i).getIsAlived()) { //if alive
+                playerAliveNum++;
+            }
+        }
+        
+        return playerAliveNum;
+    }
+
+    public String printSlotOwnership() {
+        String result="";
+        
+        //slotId, slotName, slotOwner
+        for (int i=0; i<144; i++) {
+            int boardPos = i;
+            if (slotInfo.containsKey(boardPos)) {
+                String ownership = "";
+                //System.out.println("TEST SLOT OWNERSHIP"+boardPos);
+                
+                if (slotInfo.get(boardPos).getSlotOwner()==-1) {
+                    ownership="NA";
+                } else {
+                    ownership="Player "+(slotInfo.get(boardPos).getSlotOwner()+1);
+                }
+                    
+                result+="Slot: "+slotInfo.get(boardPos).getSlotId()+" | SlotName: "+slotInfo.get(boardPos).getSlotName()+" | "+ownership+"\n";
+            }
+        }
+        
+        return result;
+    }
+
+    public String modifySlotOwnership(int slotId, int ownershipId) {
+        String result="";
+        
+        int boardPos = calBoardPos(slotId);
+        if (slotInfo.containsKey(boardPos)) {
+            if (ownershipId<=3 && ownershipId>=-1) {
+                //get the current ownership
+                int originalOwner = slotInfo.get(boardPos).getSlotOwner();
+                if (originalOwner!=-1) {//need to update the old owner's playerStatus landNum
+                    //update the landNum
+                    playerStatus.get(originalOwner).setDelLandNum();
+                }
+                slotInfo.get(boardPos).setSlotOwner(ownershipId);
+                
+                if (ownershipId==-1) {
+                    result+="Updated! Slot: "+slotId+" new ownership is belonging to no one";
+                } else {
+                    //need to update the new owner's playerStatus landNum
+                    playerStatus.get(ownershipId).setAddLandNum();
+                    result+="Updated! Slot: "+slotId+" new ownership is belonging to player "+(ownershipId+1);
+                }
+                
+            } else {
+                result+="The OwnershipID Invalid!";
+            }
+        } else {
+            result+="Do not have this slot!";
+        }
+        
+        return result;
+    }
     
 }

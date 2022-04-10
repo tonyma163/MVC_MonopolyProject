@@ -19,7 +19,7 @@ public class MonopolyController {
     
     public void createPlayer(String[] tempPlayerName) {
         model.createPlayer(tempPlayerName);
-        view.showMessage("player created.");
+        view.showMessage("players created.");
     }
     
     public void createBoard() {
@@ -76,6 +76,32 @@ public class MonopolyController {
         boolean isAlived=model.checkPlayerIsAlived(playerId);
         
         return isAlived;
+    }
+
+    public void printBoard() {
+        view.showMessage(model.printBoard());
+    }
+
+    public boolean checkWinner() {
+        boolean hasWinner = false;
+        
+        //check how many players are alive
+        if (model.playerAliveNum()>1) {
+            hasWinner = false;
+        } else {
+            hasWinner=true;
+        }
+        
+        
+        return hasWinner;
+    }
+
+    public void printSlotOwnership() {
+        view.showMessage(model.printSlotOwnership());
+    }
+
+    public void modifySlotOwnership(int slotId, int ownershipId) {
+        view.showMessage(model.modifySlotOwnership(slotId, ownershipId));
     }
     
 }

@@ -16,8 +16,6 @@ public class MonopolyPlayer {
     private boolean isAlived;
     private int position;
     
-    private int playerDeadNum;
-    
     public MonopolyPlayer(int id, String name, long money, int landNum, boolean isAlived, int position) {
         this.id = id;
         this.name = name;
@@ -25,8 +23,6 @@ public class MonopolyPlayer {
         this.landNum = landNum;
         this.isAlived = isAlived;
         this.position = position;
-        
-        this.playerDeadNum = 0;
     }
     
     public int getId() {
@@ -57,8 +53,12 @@ public class MonopolyPlayer {
         return landNum;
     }
     
-    public void setLandNum() {
+    public void setAddLandNum() {
         this.landNum++;
+    }
+    
+    public void setDelLandNum() {
+        this.landNum--;
     }
     
     public void clearLandNum() {
@@ -79,14 +79,6 @@ public class MonopolyPlayer {
     
     public void setPosition(int position) {
         this.position = position;
-    }
-    
-    public int getPlayerDeadNum() {
-        return playerDeadNum;
-    }
-    
-    public void addPlayerDeadNum() {
-        this.playerDeadNum++;
     }
     
 }

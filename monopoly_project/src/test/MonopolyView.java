@@ -91,6 +91,8 @@ public class MonopolyView {
         
         int skipRoundCounter = 0;
         
+        boolean editorModeOn = false;
+        
         //round start
         System.out.println("Round Start!");
         while (!isGameOver) {
@@ -106,15 +108,56 @@ public class MonopolyView {
                 
             System.out.println("Player Turn: Player"+(playerTurn+1));
             
+            //print board
+            controller.printBoard();
+            
+            //print slot ownership
+            controller.printSlotOwnership();
+            
             //show players status
             controller.getAllPlayerStatus();
             
             System.out.println("Please enter integer 1 to roll the dice");
-            
+            int rollChoice = s.nextInt();
             //roll the dice and move
-            if (s.nextInt()==1) {
+            if (rollChoice==1) {
                 //roll the dice
                 controller.rollDice(playerTurn);
+            } else if (rollChoice==2) {
+                editorModeOn=true;
+            }
+            System.out.println("GameEditorMode: "+editorModeOn);
+            //if editorModeOn
+            while (editorModeOn) {
+                //4 options
+                System.out.println("Game Editor Mode");
+                System.out.println("1) Modify slot ownership");
+                System.out.println("2) Modify player's balance");
+                System.out.println("3) Modify player's location");
+                System.out.println("4) Modify player's alive status");
+                System.out.println("0) End Game Editor Mode");
+                
+                int modifyChoice = s.nextInt();
+                switch (modifyChoice) {
+                    case 1:
+                        //modify slot ownership
+                        modifySlotOwnership();
+                        break;
+                    case 2:
+                        //modify player's balance
+                        break;
+                    case 3:
+                        //modify player's location
+                        break;
+                    case 4:
+                        //modify player's alive status
+                        break;
+                    case 0:
+                        //end the game editor mode
+                        editorModeOn=false;
+                        break;
+                }
+                
             }
             
             //After player rolled the dice, it should check the newPosition slot isForPurchase or isForTrade
@@ -139,6 +182,22 @@ public class MonopolyView {
                 skipRoundCounter++;
                 round++;
             }
+            
+            //check winner
+            if (controller.checkWinner()) { //if win
+                isGameOver=true;
+            }
         }
+        //game over!
+        System.out.println("Game Over!");
+    }
+
+    private void modifySlotOwnership() {
+        //require the slotId and the new ownershipId
+        System.out.println("Please enter the slot position: ");
+        int slotId = s.nextInt();
+        System.out.println("Please enter the new ownership(0 represent no one own it, 1-4 represent playerId): ");
+        int ownershipId = (s.nextInt()-1);
+        controller.modifySlotOwnership(slotId, ownershipId);
     }
 }
