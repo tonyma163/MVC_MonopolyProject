@@ -9,4 +9,5 @@ university project
 Recent update: 2022_04_25
 
 The GUI version is the project named monopoly.
+
 The CML version is the project named monopoly_project
