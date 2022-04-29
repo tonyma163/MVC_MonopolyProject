@@ -59,6 +59,7 @@ public class MView extends JFrame implements KeyListener{
     
     //other elements
     int count;
+    boolean isGameStart = false;
     
     public MView() {
         //creating the JFrame object
@@ -265,6 +266,12 @@ public class MView extends JFrame implements KeyListener{
                 
                 //visible panels
                 panelMenu.setVisible(true);
+                
+                //close the game editor
+                //set game editor mode off
+                controller.setGameEditorMode(false);
+                //close the game editor panel
+                panelGameEditor.setVisible(false);
             }
         });
         
@@ -296,12 +303,13 @@ public class MView extends JFrame implements KeyListener{
                             
                             //check the owner is not equal the player
                             if (!controller.checkPlayerEqualOwner(turn, playerPos)) {
-                            //pay the fee
-                            controller.playerPayFee(turn, playerPos);
+                                //pay the fee
+                                controller.playerPayFee(turn, playerPos);
                             }
                             
                         }
                     }
+                    
                     //set the player has rolled
                     controller.setPlayerHasRolled(controller.getPlayerTurn());
                     
@@ -324,12 +332,15 @@ public class MView extends JFrame implements KeyListener{
                     controller.addRound();
                     
                     //check the next player is alived or not
+                    /*
                     if (!controller.checkIsAlive(controller.getPlayerTurn())) { // not alive
                         System.out.println("Skipcounter++");
                         controller.addSkipCounter();
                         //add round after skip
                         controller.addRound();
                     }
+                    */
+                    
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please roll the dice before you end the turn!");
                 }
@@ -392,7 +403,7 @@ public class MView extends JFrame implements KeyListener{
                                     if (!tf_tradeAmount.getText().isBlank()) {
                                         //everything is fine
                                         try {
-                                            long tradeAmount = Long.parseLong(tf_tradeAmount.getText());
+                                            double tradeAmount = Double.parseDouble(tf_tradeAmount.getText());
                                             System.out.println("Choice: "+choice+", SlotPos: "+slotPos+", Trade  amount: "+tradeAmount);
                                             //buy function
                                             if (choice==1) {
@@ -453,7 +464,7 @@ public class MView extends JFrame implements KeyListener{
             public void actionPerformed(ActionEvent e) {
                 System.out.println("[Button Clicked] Modify balance");
                 int playerId  = (Integer.parseInt(JOptionPane.showInputDialog(null, "Please enter playerId (1-4): "))-1);
-                long newBalance  = Integer.parseInt(JOptionPane.showInputDialog(null, "Please enter the new balance: "));
+                double newBalance  = Double.parseDouble(JOptionPane.showInputDialog(null, "Please enter the new balance: "));
                 
                 //modify
                 controller.modifyPlayerBalance(playerId, newBalance);
@@ -514,6 +525,7 @@ public class MView extends JFrame implements KeyListener{
     }
     
     public void initialGame() {
+        isGameStart = true;
         //Getting player names
         String player1Name = "";
         String player2Name = "";
@@ -619,7 +631,6 @@ public class MView extends JFrame implements KeyListener{
                         
                         tempArray2 = controller.getAllPlayerID(count);
                         
-                        
                         for (int i=0; i<4; i++) {
                             cell.add(new JLabel(tempArray2[i]));
                         }
@@ -672,7 +683,6 @@ public class MView extends JFrame implements KeyListener{
                 
                 count++;
                 panelBoard.add(cell);
-                
             }
         }
     }
@@ -721,7 +731,7 @@ public class MView extends JFrame implements KeyListener{
         if (e.getKeyCode() == KeyEvent.VK_G) {
             
             //check the mode has on or not
-            if (!controller.getGameEditorMode()) {
+            if (!controller.getGameEditorMode() && isGameStart) {
                 System.out.println("[G] GAME EDITOR ON");
                 //set game editor mode on
                 controller.setGameEditorMode(true);
@@ -735,7 +745,7 @@ public class MView extends JFrame implements KeyListener{
         if (e.getKeyCode() == KeyEvent.VK_E) {
             
             //check the mode has on or not
-            if (controller.getGameEditorMode()) {
+            if (controller.getGameEditorMode() && isGameStart) {
                 System.out.println("[E] GAME EDITOR OFF");
                 //set game editor mode off
                 controller.setGameEditorMode(false);

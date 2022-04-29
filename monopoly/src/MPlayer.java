@@ -5,13 +5,13 @@
 public class MPlayer {
     private int id;
     private String name;
-    private long money;
+    private double money;
     //private ArrayList<Integer> land = new ArrayList<Integer>();
     private int landNum;
     private boolean isAlived;
     private int position;
     
-    public MPlayer(int id, String name, long money, int landNum, boolean isAlived, int position) {
+    public MPlayer(int id, String name, double money, int landNum, boolean isAlived, int position) {
         this.id = id;
         this.name = name;
         this.money = money;
@@ -36,11 +36,11 @@ public class MPlayer {
         this.name = name;
     }
     
-    public long getMoney() {
+    public double getMoney() {
         return money;
     }
     
-    public void setMoney(long money) {
+    public void setMoney(double money) {
         this.money = money;
     }
     

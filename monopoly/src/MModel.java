@@ -78,12 +78,12 @@ public class MModel {
             //slotId,slotName,slotPrice
             int slotId = Integer.parseInt(tempArray[0]);
             String slotName = tempArray[1];
-            int slotPrice = Integer.parseInt(tempArray[2]);
+            double slotPrice = Double.parseDouble(tempArray[2]);
             
             //save it
             //get the boardPos
             int boardPos = calBoardPos(slotId);
-            long fee = slotPrice/10;
+            double fee = slotPrice/10;
             
             //create the slotInfo
             boolean isPurchase = true;
@@ -179,7 +179,7 @@ public class MModel {
             if (slotInfo.containsKey(calBoardPos(i))) {
                 String slotPos = Integer.toString(i);
                 String slotName = slotInfo.get(calBoardPos(i)).getSlotName();
-                String slotPrice = Long.toString(slotInfo.get(calBoardPos(i)).getSlotPrice());
+                String slotPrice = Double.toString(slotInfo.get(calBoardPos(i)).getSlotPrice());
                 
                 int tempInt = slotInfo.get(calBoardPos(i)).getSlotOwner();
                 String slotOwner = "";
@@ -215,7 +215,7 @@ public class MModel {
     }
 
     public String getSlotPrice(int count) {
-        return Long.toString(slotInfo.get(count).getSlotPrice());
+        return Double.toString(slotInfo.get(count).getSlotPrice());
     }
 
     public String getSlotOwner(int count) {
@@ -337,8 +337,8 @@ public class MModel {
         updateStatusPanel();
     }
     
-    public void addMoney(int playerId, long money) {
-        long newMoney = playerStatus.get(playerId).getMoney()+money;
+    public void addMoney(int playerId, double money) {
+        double newMoney = playerStatus.get(playerId).getMoney()+money;
         playerStatus.get(playerId).setMoney(newMoney);
     }
     
@@ -348,7 +348,7 @@ public class MModel {
         for (int i=0; i<4; i++) {
             String playerId = "player"+(i+1);
             String playerName = playerStatus.get(i).getName();
-            String playerBalance = Long.toString(playerStatus.get(i).getMoney());
+            String playerBalance = Double.toString(playerStatus.get(i).getMoney());
             String playerLandNum = Integer.toString(playerStatus.get(i).getLandNum());
             String playerPos = Integer.toString(playerStatus.get(i).getPosition());
             String playerAlive = String.valueOf(playerStatus.get(i).getIsAlived());
@@ -382,7 +382,14 @@ public class MModel {
         //add round and update
         round++;
         playerTurn = round%4;
-        updateStatusPanel();
+        
+        //check the next player is alive or not
+        if (playerStatus.get(playerTurn).getIsAlived())
+            updateStatusPanel();
+        else {
+            addSkipCounter();
+            addRound();
+        }
     }
 
     public boolean checkPlayerHasRolled(int playerTurn) {
@@ -431,10 +438,10 @@ public class MModel {
     }
 
     public void purchaseSlot(int currentPlayerId, int currentBoardPos) {
-        long slotPrice = slotInfo.get(currentBoardPos).getSlotPrice();
+        double slotPrice = slotInfo.get(currentBoardPos).getSlotPrice();
         
         //check the playerHas enough amount
-        long playerBalance = getPlayerBalance(currentPlayerId);
+        double playerBalance = getPlayerBalance(currentPlayerId);
         System.out.println("playerBalance: "+playerBalance);
         System.out.println("slotPrice: "+slotPrice);
         if (playerBalance >= slotPrice) {//have enough money
@@ -460,19 +467,19 @@ public class MModel {
         
     }
 
-    public long getPlayerBalance(int currentPlayerId) {
+    public double getPlayerBalance(int currentPlayerId) {
         return playerStatus.get(currentPlayerId).getMoney();
     }
 
-    public void decreasePlayerBalance(int currentPlayerId, long decreaseAmount) {
-        long playerBalance = getPlayerBalance(currentPlayerId);
-        long decreasedBalance = playerBalance-decreaseAmount;
+    public void decreasePlayerBalance(int currentPlayerId, double decreaseAmount) {
+        double playerBalance = getPlayerBalance(currentPlayerId);
+        double decreasedBalance = playerBalance-decreaseAmount;
         playerStatus.get(currentPlayerId).setMoney(decreasedBalance);
     }
 
     void playerPayFee(int playerId, int playerPos) {
         //check the fees
-        long fee = slotInfo.get(playerPos).getFee();
+        double fee = slotInfo.get(playerPos).getFee();
         
         //get the owner id
         int ownerId = slotInfo.get(playerPos).getSlotOwner();
@@ -507,9 +514,9 @@ public class MModel {
         }
     }
 
-    public void addPlayerBalance(int ownerId, long fee) {
-        long playerBalance = playerStatus.get(ownerId).getMoney();
-        long newPlayerBalance = playerBalance + fee;
+    public void addPlayerBalance(int ownerId, double fee) {
+        double playerBalance = playerStatus.get(ownerId).getMoney();
+        double newPlayerBalance = playerBalance + fee;
         playerStatus.get(ownerId).setMoney(newPlayerBalance);
     }
 
@@ -525,7 +532,7 @@ public class MModel {
 
     public boolean isBankrupt(int playerId) {
         boolean isBankrupt = false;
-        long playerBalance = playerStatus.get(playerId).getMoney();
+        double playerBalance = playerStatus.get(playerId).getMoney();
         if (playerBalance < 0) { // < 0 -> bankrupt
             isBankrupt = true;
         }
@@ -650,7 +657,7 @@ public class MModel {
         updateStatusPanel();
     }
 
-    public void modifyPlayerBalance(int playerId, long newBalance) {
+    public void modifyPlayerBalance(int playerId, double newBalance) {
         //check the playerId is 0-3
         if (playerId >=0 && playerId <=3) {
             //update
@@ -695,6 +702,7 @@ public class MModel {
             } else if (aliveString.equals("false")) {
                 playerStatus.get(playerId).setIsAlived(false);
                 controller.viewShowMessage("Updated! Player "+(playerId+1)+" isAlived? "+playerStatus.get(playerId).getIsAlived());
+                killPlayer(playerId);
             }  else {
                     controller.viewShowMessage("Please enter a correct boolean choice (true/false)");
             }
@@ -741,7 +749,7 @@ public class MModel {
         updateStatusPanel();
     }
 
-    public void tradeBuyFunc(int currentPlayerId, int slotPos, long tradeAmount) {
+    public void tradeBuyFunc(int currentPlayerId, int slotPos, double tradeAmount) {
         
         int boardSlotPos = calBoardPos(slotPos);
         //check has owner first
@@ -751,13 +759,13 @@ public class MModel {
             int slotOldOwnerId = slotInfo.get(boardSlotPos).getSlotOwner();
             if (slotOldOwnerId!=currentPlayerId)  {
                 //check player balance
-                long playerBalance = playerStatus.get(currentPlayerId).getMoney();
+                double playerBalance = playerStatus.get(currentPlayerId).getMoney();
                 playerBalance-=tradeAmount;
             
                 if (playerBalance >= tradeAmount) {//enough balance
                     System.out.println("OwnerId: "+slotInfo.get(boardSlotPos).getSlotOwner());
                     System.out.println("OwnerBalance: "+playerStatus.get(slotOldOwnerId).getMoney());
-                    long ownerBalance = playerStatus.get(slotOldOwnerId).getMoney();
+                    double ownerBalance = playerStatus.get(slotOldOwnerId).getMoney();
                     ownerBalance+=tradeAmount;
                 
                     //handling the transaction
@@ -791,14 +799,14 @@ public class MModel {
         }
     }
 
-    public void tradeSellFunc(int currentPlayerId, int buyerId, int slotPos, long tradeAmount) {
+    public void tradeSellFunc(int currentPlayerId, int buyerId, int slotPos, double tradeAmount) {
         int boardSlotPos = calBoardPos(slotPos);
         //check has owner first
         if (checkHasOwner(boardSlotPos)) {
             //check the buyer balance
-            long buyerBalance = playerStatus.get(buyerId).getMoney();
+            double buyerBalance = playerStatus.get(buyerId).getMoney();
             if (buyerBalance>=tradeAmount) {//enough balance
-                long playerBalance = playerStatus.get(currentPlayerId).getMoney();
+                double playerBalance = playerStatus.get(currentPlayerId).getMoney();
                 playerBalance+=tradeAmount;
                 buyerBalance-=tradeAmount;
                 

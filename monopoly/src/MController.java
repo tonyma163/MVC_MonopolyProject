@@ -143,7 +143,7 @@ public class MController {
         model.modifySlotOwnership(slotId, ownerId);
     }
 
-    public void modifyPlayerBalance(int playerId, long newBalance) {
+    public void modifyPlayerBalance(int playerId, double newBalance) {
         model.modifyPlayerBalance(playerId, newBalance);
     }
 
@@ -155,11 +155,11 @@ public class MController {
         model.modifyPlayerPos(playerId, newPos);
     }
 
-    public void tradeBuyFunc(int currentPlayerId, int slotPos, long tradeAmount) {
+    public void tradeBuyFunc(int currentPlayerId, int slotPos, double tradeAmount) {
         model.tradeBuyFunc(currentPlayerId, slotPos, tradeAmount);
     }
 
-    public void tradeSellFunc(int currentPlayerId, int buyerId, int slotPos, long tradeAmount) {
+    public void tradeSellFunc(int currentPlayerId, int buyerId, int slotPos, double tradeAmount) {
         model.tradeSellFunc(currentPlayerId, buyerId, slotPos, tradeAmount);
     }
 

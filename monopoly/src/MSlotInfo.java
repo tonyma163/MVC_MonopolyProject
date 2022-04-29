@@ -6,15 +6,15 @@ public class MSlotInfo {
     private int slotId;
     private int boardPos;
     private String slotName;
-    private long slotPrice;
+    private double slotPrice;
     private int slotOwner;
     
     private boolean forPurchase;
     private boolean forTrade;
     
-    private long fee;
+    private double fee;
     
-    public MSlotInfo(int slotId, int boardPos, String slotName, long slotPrice, boolean forPurchase, boolean forTrade, int slotOwner, long fee) {
+    public MSlotInfo(int slotId, int boardPos, String slotName, double slotPrice, boolean forPurchase, boolean forTrade, int slotOwner, double fee) {
         this.slotId = slotId;
         this.boardPos = boardPos;
         this.slotName = slotName;
@@ -49,7 +49,7 @@ public class MSlotInfo {
         this.slotName = slotName;
     }
     
-    public long getSlotPrice() {
+    public double getSlotPrice() {
         return slotPrice;
     }
     
@@ -81,7 +81,7 @@ public class MSlotInfo {
         this.slotOwner = slotOwner;
     }
     
-    public long getFee() {
+    public double getFee() {
         return fee;
     }
     
